@@ -1,0 +1,77 @@
+services:
+  frontend:
+    container_name: frontend-dev
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: ["pnpm", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
+    depends_on:
+      - backend
+    networks:
+      dev_network:
+        ipv4_address: "192.168.155.101"
+    ports:
+      - "3000:3000"
+
+  backend:
+    container_name: backend-dev
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ../backend:/app
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_ENV=development
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=data
+    command: ["flask", "--app", "main", "run", "--host=0.0.0.0", "--debug"]
+    depends_on:
+      - db
+    networks:
+      dev_network:
+
+  db:
+    container_name: db-dev
+    image: mariadb:latest
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=data
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      # for debugging in dbeaver
+      - "3306:3306"
+    networks:
+      dev_network:
+
+  nginx:
+    container_name: nginx-dev
+    build:
+      context: ../nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      dev_network:
+
+networks:
+  dev_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.155.0/24
+
+volumes:
+  mariadb_data:
