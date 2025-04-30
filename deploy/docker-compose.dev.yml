@@ -43,8 +43,6 @@ services:
     environment:
       - MARIADB_ROOT_PASSWORD=root
       - MARIADB_DATABASE=data
-    volumes:
-      - mariadb_data:/var/lib/mysql
     ports:
       # for debugging in dbeaver
       - "3306:3306"
@@ -70,6 +68,3 @@ networks:
     ipam:
       config:
         - subnet: 192.168.155.0/24
-
-volumes:
-  mariadb_data:
