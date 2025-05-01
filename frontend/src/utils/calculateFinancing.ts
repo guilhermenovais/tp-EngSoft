@@ -115,12 +115,14 @@ export function calculateFinancing(
         );
 
   return {
-    valorNominalTotal: parseFloat(
-      parcelas.reduce((sum, p) => sum + p.valorNominal, 0).toFixed(2),
-    ),
-    valorRealTotal: parseFloat(
-      parcelas.reduce((sum, p) => sum + p.valorReal, 0).toFixed(2),
-    ),
+    valorNominalTotal:
+      entrada +
+      parseFloat(
+        parcelas.reduce((sum, p) => sum + p.valorNominal, 0).toFixed(2),
+      ),
+    valorRealTotal:
+      entrada +
+      parseFloat(parcelas.reduce((sum, p) => sum + p.valorReal, 0).toFixed(2)),
     parcelas,
   };
 }
