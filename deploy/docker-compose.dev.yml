@@ -32,7 +32,8 @@ services:
       - DB_NAME=data
     command: ["flask", "--app", "main", "run", "--host=0.0.0.0", "--debug"]
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       dev_network:
 
@@ -48,6 +49,20 @@ services:
       - "3306:3306"
     networks:
       dev_network:
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized",
+        ]
+      start_period: 1m
+      start_interval: 1s
+      interval: 1m
+      timeout: 5s
+      retries: 3
 
   nginx:
     container_name: nginx-dev
