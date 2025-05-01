@@ -52,28 +52,22 @@
   </v-form>
 </template>
 
-<script setup lang="ts">
-import type { FinancingData } from "@/types/FinancingData";
-import { watch } from "vue";
+<script lang="ts" setup>
+import { reactive, watch } from "vue";
+import type { FinancingInput } from "@/utils/calculateFinancing";
 
 const emit = defineEmits<{
-  (e: "update", value: FinancingData): void;
+  (e: "update:modelValue", value: FinancingInput): void;
 }>();
 
-const form = reactive<FinancingData>({
-  valorTotal: null,
-  entrada: null,
-  juros: null,
-  inflacao: null,
-  qtdParcelas: null,
-  tabela: null,
+const form = reactive<FinancingInput>({
+  valorTotal: 0,
+  entrada: 0,
+  juros: 0,
+  inflacao: 0,
+  qtdParcelas: 0,
+  tabela: "PRICE",
 });
 
-watch(
-  form,
-  () => {
-    emit("update", { ...form });
-  },
-  { deep: true },
-);
+watch(form, () => emit("update:modelValue", { ...form }), { deep: true });
 </script>
