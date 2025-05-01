@@ -14,7 +14,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn color="error" text @click="cancel">Cancelar</v-btn>
-        <v-btn color="primary" @click="confirm" :disabled="!name">
+        <v-btn color="success" @click="confirm" :disabled="!name">
           Salvar
         </v-btn>
       </v-card-actions>
