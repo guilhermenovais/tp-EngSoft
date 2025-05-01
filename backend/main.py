@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from config import (
     SQLALCHEMY_DATABASE_URI,
-    SQLALCHEMY_ENGINE_OPTIONS,
     SQLALCHEMY_TRACK_MODIFICATIONS,
 )
 
@@ -11,7 +10,6 @@ app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = SQLALCHEMY_TRACK_MODIFICATIONS
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = SQLALCHEMY_ENGINE_OPTIONS
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
