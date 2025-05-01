@@ -1,0 +1,63 @@
+<template>
+  <h2 class="text-h5 mb-4">{{ simulationName }}</h2>
+
+  <Simulation v-model="formData" @saveButtonClicked="onSaveButtonClicked" />
+</template>
+
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { SimulationService } from "@/services/SimulationService";
+import type { FinancingInput } from "@/utils/calculateFinancing";
+
+const route = useRoute();
+const simulationId = parseInt((route.params as any).id as string, 10);
+
+const loaded = ref(false);
+const simulationName = ref("");
+const formData = ref<FinancingInput>({
+  valorTotal: 0,
+  entrada: 0,
+  juros: 0,
+  inflacao: 0,
+  qtdParcelas: 0,
+  tabela: "PRICE",
+});
+
+onMounted(async () => {
+  try {
+    const data = await SimulationService.getSimulation(simulationId);
+    formData.value = {
+      valorTotal: data.valor_total,
+      entrada: data.entrada,
+      juros: data.juros,
+      inflacao: data.inflacao,
+      qtdParcelas: data.qtd_parcelas,
+      tabela: data.tabela,
+    };
+    simulationName.value = data.nome;
+    loaded.value = true;
+  } catch (err) {
+    console.error("Erro ao carregar simulação", err);
+    alert("Simulação não encontrada.");
+  }
+});
+
+async function onSaveButtonClicked() {
+  try {
+    SimulationService.updateSimulation(simulationId, {
+      nome: simulationName.value,
+      id_autor: 1, // TODO: substituir por id real
+      valor_total: formData.value.valorTotal,
+      entrada: formData.value.entrada,
+      juros: formData.value.juros,
+      inflacao: formData.value.inflacao,
+      qtd_parcelas: formData.value.qtdParcelas,
+      tabela: formData.value.tabela,
+    });
+  } catch (err) {
+    console.error("Erro ao salvar simulação", err);
+    alert("Erro ao salvar simulação.");
+  }
+}
+</script>
