@@ -88,7 +88,7 @@ export function calculateFinancing(
   const { valorTotal, entrada, juros, inflacao, qtdParcelas, tabela } = input;
 
   const valorFinanciado = valorTotal - entrada;
-  if (valorFinanciado <= 0 || qtdParcelas <= 0) {
+  if (valorFinanciado <= 0 || qtdParcelas <= 0 || juros === 0) {
     return {
       valorNominalTotal: 0,
       valorRealTotal: 0,
