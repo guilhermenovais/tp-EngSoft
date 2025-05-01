@@ -19,5 +19,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SaveSimulationDialog: typeof import('./components/SaveSimulationDialog.vue')['default']
+    Simulation: typeof import('./components/Simulation.vue')['default']
   }
 }
