@@ -28,6 +28,13 @@ def get_simulacao(id):
     return jsonify(schema.dump(simulacao))
 
 
+@bp.route("/getAll", methods=["GET"])
+def get_all():
+    simulacao = service.get_all()
+    list_schema = SimulacaoSchema(many=True)
+    return jsonify(list_schema.dump(simulacao)), 200
+
+
 @bp.route("/<int:id>", methods=["PUT"])
 def update_simulacao(id):
     data = request.get_json()
