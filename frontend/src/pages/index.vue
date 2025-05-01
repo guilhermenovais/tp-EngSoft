@@ -1,4 +1,6 @@
 <template>
+  <h2 class="text-h5 mb-4">Calculadora de Financiamento</h2>
+
   <Simulation v-model="formData" @saveButtonClicked="onSaveButtonClicked" />
 
   <SaveSimulationDialog

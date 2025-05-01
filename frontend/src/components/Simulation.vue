@@ -1,6 +1,4 @@
 <template>
-  <h2 class="text-h5 mb-4">Calculadora de Financiamento</h2>
-
   <FinancingForm v-model="localFormData" />
 
   <div class="d-flex fill-width flex-row-reverse">
