@@ -1,25 +1,29 @@
 <template>
-  <v-card class="mt-6" v-if="props.result">
+  <v-card class="mt-6">
     <v-card-title>Resultado</v-card-title>
     <v-card-text>
       <p>
         <strong>Valor nominal total pago:</strong>
-        {{ formatCurrency(props.result.valorNominalTotal) }}
+        {{ formatCurrency(result.valorNominalTotal) }}
       </p>
       <p>
         <strong>Valor real (ajustado pela inflação):</strong>
-        {{ formatCurrency(props.result.valorRealTotal) }}
+        {{ formatCurrency(result.valorRealTotal) }}
       </p>
     </v-card-text>
+
+    <InstallmentTable
+      v-if="result.parcelas.length"
+      :installments="result.parcelas"
+    />
   </v-card>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  result: {
-    valorNominalTotal: number;
-    valorRealTotal: number;
-  } | null;
+import type { FinancingCalculation } from "@/utils/calculateFinancing";
+
+defineProps<{
+  result: FinancingCalculation;
 }>();
 
 function formatCurrency(value: number): string {
