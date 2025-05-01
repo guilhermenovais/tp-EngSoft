@@ -1,4 +1,4 @@
-export interface NovaSimulacao {
+export interface NewSimulation {
   nome: string;
   id_autor: number;
   valor_total: number;
@@ -9,12 +9,12 @@ export interface NovaSimulacao {
   tabela: string;
 }
 
-export interface SimulacaoSalva {
+export interface SavedSimulation {
   id: number;
 }
 
-export class SimulacaoService {
-  static async salvarSimulacao(data: NovaSimulacao): Promise<SimulacaoSalva> {
+export class SimulationService {
+  static async saveSimulation(data: NewSimulation): Promise<SavedSimulation> {
     const response = await fetch("/backend/simulacao", {
       method: "POST",
       headers: {
