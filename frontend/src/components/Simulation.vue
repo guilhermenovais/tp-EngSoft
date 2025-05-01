@@ -6,6 +6,7 @@
       :disabled="financingCalculation.parcelas.length === 0"
       color="primary"
       @click="emit('saveButtonClicked')"
+      :loading="saveButtonLoading"
     >
       Salvar simulação
     </v-btn>
@@ -25,6 +26,7 @@ import {
 
 const props = defineProps<{
   modelValue: FinancingInput;
+  saveButtonLoading: boolean;
 }>();
 
 const emit = defineEmits<{

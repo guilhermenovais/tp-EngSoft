@@ -1,7 +1,11 @@
 <template>
   <h2 class="text-h5 mb-4">{{ simulationName }}</h2>
 
-  <Simulation v-model="formData" @saveButtonClicked="onSaveButtonClicked" />
+  <Simulation
+    v-model="formData"
+    @saveButtonClicked="onSaveButtonClicked"
+    :saveButtonLoading="saveButtonLoading"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -24,6 +28,8 @@ const formData = ref<FinancingInput>({
   tabela: "PRICE",
 });
 
+const saveButtonLoading = ref(false);
+
 onMounted(async () => {
   try {
     const data = await SimulationService.getSimulation(simulationId);
@@ -45,7 +51,8 @@ onMounted(async () => {
 
 async function onSaveButtonClicked() {
   try {
-    SimulationService.updateSimulation(simulationId, {
+    saveButtonLoading.value = true;
+    await SimulationService.updateSimulation(simulationId, {
       nome: simulationName.value,
       id_autor: 1, // TODO: substituir por id real
       valor_total: formData.value.valorTotal,
@@ -55,6 +62,7 @@ async function onSaveButtonClicked() {
       qtd_parcelas: formData.value.qtdParcelas,
       tabela: formData.value.tabela,
     });
+    saveButtonLoading.value = false;
   } catch (err) {
     console.error("Erro ao salvar simulação", err);
     alert("Erro ao salvar simulação.");
