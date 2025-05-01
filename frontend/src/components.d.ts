@@ -13,6 +13,7 @@ declare module 'vue' {
     FinancingResult: typeof import('./components/FinancingResult.vue')['default']
     Header: typeof import('./components/Header.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    InstallmentTable: typeof import('./components/InstallmentTable.vue')['default']
     NavigationDrawer: typeof import('./components/NavigationDrawer.vue')['default']
     NumericInput: typeof import('./components/NumericInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
