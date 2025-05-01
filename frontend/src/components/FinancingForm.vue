@@ -3,7 +3,7 @@
     <v-row dense>
       <v-col cols="12" sm="6">
         <NumericInput
-          v-model="form.valorTotal"
+          v-model="localForm.valorTotal"
           label="Valor Total"
           :min="0"
           :step="0.01"
@@ -11,7 +11,7 @@
       </v-col>
       <v-col cols="12" sm="6">
         <NumericInput
-          v-model="form.entrada"
+          v-model="localForm.entrada"
           label="Entrada"
           :min="0"
           :step="0.01"
@@ -19,7 +19,7 @@
       </v-col>
       <v-col cols="12" sm="6">
         <NumericInput
-          v-model="form.juros"
+          v-model="localForm.juros"
           label="Juros ao ano (%)"
           :min="0"
           :step="0.01"
@@ -27,7 +27,7 @@
       </v-col>
       <v-col cols="12" sm="6">
         <NumericInput
-          v-model="form.inflacao"
+          v-model="localForm.inflacao"
           label="Inflação ao ano (%)"
           :min="0"
           :step="0.01"
@@ -35,7 +35,7 @@
       </v-col>
       <v-col cols="12" sm="6">
         <NumericInput
-          v-model="form.qtdParcelas"
+          v-model="localForm.qtdParcelas"
           label="Quantidade de parcelas"
           :min="1"
           :step="1"
@@ -43,7 +43,7 @@
       </v-col>
       <v-col cols="12" sm="6">
         <v-select
-          v-model="form.tabela"
+          v-model="localForm.tabela"
           :items="['SAC', 'PRICE']"
           label="Tabela"
         />
@@ -53,21 +53,19 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch } from "vue";
+import { computed } from "vue";
 import type { FinancingInput } from "@/utils/calculateFinancing";
+
+const props = defineProps<{
+  modelValue: FinancingInput;
+}>();
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: FinancingInput): void;
 }>();
 
-const form = reactive<FinancingInput>({
-  valorTotal: 0,
-  entrada: 0,
-  juros: 0,
-  inflacao: 0,
-  qtdParcelas: 0,
-  tabela: "PRICE",
+const localForm = computed({
+  get: () => props.modelValue,
+  set: (val: FinancingInput) => emit("update:modelValue", val),
 });
-
-watch(form, () => emit("update:modelValue", { ...form }), { deep: true });
 </script>
