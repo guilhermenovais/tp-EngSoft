@@ -6,6 +6,15 @@
     @saveButtonClicked="onSaveButtonClicked"
     :saveButtonLoading="saveButtonLoading"
   />
+
+  <v-snackbar v-model="snackbar.visible" :color="snackbar.color" timeout="3000">
+    {{ snackbar.message }}
+    <template v-slot:actions>
+      <v-btn color="white" variant="text" @click="snackbar.visible = false">
+        OK
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script lang="ts" setup>
@@ -30,6 +39,12 @@ const formData = ref<FinancingInput>({
 
 const saveButtonLoading = ref(false);
 
+const snackbar = ref({
+  visible: false,
+  message: "",
+  color: "success",
+});
+
 onMounted(async () => {
   try {
     const data = await SimulationService.getSimulation(simulationId);
@@ -45,7 +60,11 @@ onMounted(async () => {
     loaded.value = true;
   } catch (err) {
     console.error("Erro ao carregar simulação", err);
-    alert("Simulação não encontrada.");
+    snackbar.value = {
+      visible: true,
+      message: "Simulação não encontrada",
+      color: "error",
+    };
   }
 });
 
@@ -63,9 +82,18 @@ async function onSaveButtonClicked() {
       tabela: formData.value.tabela,
     });
     saveButtonLoading.value = false;
+    snackbar.value = {
+      visible: true,
+      message: "Simulação atualizada com sucesso",
+      color: "green",
+    };
   } catch (err) {
     console.error("Erro ao salvar simulação", err);
-    alert("Erro ao salvar simulação.");
+    snackbar.value = {
+      visible: true,
+      message: "Erro ao atualizar simulação",
+      color: "error",
+    };
   }
 }
 </script>
