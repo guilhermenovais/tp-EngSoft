@@ -1,11 +1,13 @@
 <template>
   <v-main>
-    <router-view />
+    <Header @toggle-drawer="drawer = !drawer" />
+    <NavigationDrawer v-model="drawer" />
+    <v-container>
+      <router-view />
+    </v-container>
   </v-main>
-
-  <AppFooter />
 </template>
 
 <script lang="ts" setup>
-  //
+const drawer = ref(false);
 </script>

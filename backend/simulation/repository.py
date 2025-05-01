@@ -12,6 +12,9 @@ class SimulacaoRepository:
     def get_by_id(self, id):
         return Simulacao.query.get(id)
 
+    def get_all(self):
+        return Simulacao.query.all()
+
     def update(self, id, data):
         simulacao = Simulacao.query.get(id)
         if simulacao:
