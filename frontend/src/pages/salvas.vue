@@ -20,7 +20,7 @@
         <p><strong>Parcelas:</strong> {{ sim.qtd_parcelas }}</p>
         <p><strong>Tabela:</strong> {{ sim.tabela }}</p>
 
-        <button @click="editSimulation(sim)" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <button @click="confirmEdit(sim.id)" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
           Editar
         </button>
         <button @click="deleteSimulation(sim.id)" class="mt-2 ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
@@ -51,16 +51,24 @@ const fetchSimulations = async () => {
   }
 }
 
-const editSimulation = (simulation: SavedSimulation) => {
-  router.push({ name: 'Calculadora', state: { simulation } })
-}
-
 const deleteSimulation = async (id: number) => {
   try {
     await SimulationService.deleteSimulation(id)
     simulations.value = simulations.value.filter((s) => s.id !== id)
   } catch (err) {
     alert('Erro ao excluir simulação.')
+  }
+}
+
+const confirmEdit = async (id: number) => {
+  const confirm = window.confirm("Você deseja editar esta simulação? Ela será removida e substituída.")
+  if (!confirm) return
+
+  try {
+    await deleteSimulation(id)
+    router.push('/')
+  } catch (err) {
+    alert('Erro ao excluir a simulação para edição.')
   }
 }
 
