@@ -1,31 +1,31 @@
 <template>
   <div class="p-4">
-    <h1 class="text-xl font-bold mb-4">Simulações Salvas</h1>
+    <h1 class="text-xl font-bold mb-6">Simulações Salvas</h1>
 
     <div v-if="loading">Carregando simulações...</div>
     <div v-else-if="error" class="text-red-500">{{ error }}</div>
     <div v-else-if="simulations.length === 0">Nenhuma simulação salva encontrada.</div>
 
-    <div v-else class="space-y-4">
+    <div v-else class="space-y-6">
       <div
         v-for="sim in simulations"
         :key="sim.id"
-        class="border rounded-xl p-4 shadow-md"
+        class="border border-gray-600 rounded-lg p-6 bg-[#121212]"
       >
+        <h2 class="text-lg font-semibold mb-4">Parâmetros da Simulação</h2>
+
         <p><strong>Nome:</strong> {{ sim.nome }}</p>
-        <p><strong>Valor Total:</strong> R$ {{ sim.valor_total.toLocaleString("pt-BR") }}</p>
-        <p><strong>Entrada:</strong> R$ {{ sim.entrada.toLocaleString("pt-BR") }}</p>
+        <p><strong>Valor Total:</strong> R$ {{ sim.valor_total.toLocaleString('pt-BR') }}</p>
+        <p><strong>Entrada:</strong> R$ {{ sim.entrada.toLocaleString('pt-BR') }}</p>
         <p><strong>Juros (%):</strong> {{ sim.juros }}</p>
         <p><strong>Inflação (%):</strong> {{ sim.inflacao }}</p>
         <p><strong>Parcelas:</strong> {{ sim.qtd_parcelas }}</p>
         <p><strong>Tabela:</strong> {{ sim.tabela }}</p>
 
-        <button @click="confirmEdit(sim.id)" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Editar
-        </button>
-        <button @click="deleteSimulation(sim.id)" class="mt-2 ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-          Excluir
-        </button>
+        <div class="flex space-x-4 mt-4">
+          <v-btn color="primary" @click="confirmEdit(sim.id)">Editar</v-btn>
+          <v-btn color="error" @click="deleteSimulation(sim.id)">Excluir</v-btn>
+        </div>
       </div>
     </div>
   </div>
