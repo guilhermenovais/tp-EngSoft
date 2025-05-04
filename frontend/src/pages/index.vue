@@ -49,10 +49,12 @@ function onSaveButtonClicked() {
 async function onSaveSimulationConfirm(nome: string) {
   dialogVisible.value = false;
 
+  const userId = usuarioStore.usuario.id;
+
   try {
     const response = await SimulationService.saveSimulation({
       nome,
-      id_autor: 1, // TODO: substituir por id real
+      id_autor: userId,
       valor_total: formData.value.valorTotal,
       entrada: formData.value.entrada,
       juros: formData.value.juros,

@@ -22,6 +22,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { SimulationService } from "@/services/SimulationService";
 import type { FinancingInput } from "@/utils/calculateFinancing";
+import { useUsuarioStore } from "@/stores/user";
 
 const route = useRoute();
 const simulationId = parseInt((route.params as any).id as string, 10);
@@ -38,6 +39,8 @@ const formData = ref<FinancingInput>({
 });
 
 const saveButtonLoading = ref(false);
+
+const usuarioStore = useUsuarioStore();
 
 const snackbar = ref({
   visible: false,
@@ -70,10 +73,11 @@ onMounted(async () => {
 
 async function onSaveButtonClicked() {
   try {
+    const userId = usuarioStore.usuario.id;
     saveButtonLoading.value = true;
     await SimulationService.updateSimulation(simulationId, {
       nome: simulationName.value,
-      id_autor: 1, // TODO: substituir por id real
+      id_autor: userId,
       valor_total: formData.value.valorTotal,
       entrada: formData.value.entrada,
       juros: formData.value.juros,
