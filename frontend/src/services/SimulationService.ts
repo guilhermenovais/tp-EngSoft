@@ -1,3 +1,5 @@
+import api from "./api";
+
 export interface NewSimulation {
   nome: string;
   id_autor: number;
@@ -23,56 +25,42 @@ export interface SavedSimulation {
 
 export class SimulationService {
   static async saveSimulation(data: NewSimulation): Promise<SavedSimulation> {
-    const response = await fetch("/backend/simulacao", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await api.post("/simulacao", data);
 
-    if (!response.ok) {
+    if (response.status != 201) {
       throw new Error("Erro ao salvar simulação");
     }
 
-    return await response.json();
+    return await response.data;
   }
 
   static async getSimulation(id: number): Promise<SavedSimulation> {
-    const response = await fetch(`/backend/simulacao/${id}`);
+    const response = await api.get(`/simulacao/${id}`);
 
-    if (!response.ok) {
+    if (response.status != 200) {
       throw new Error("Erro ao buscar simulação");
     }
 
-    return await response.json();
+    return await response.data;
   }
 
   static async updateSimulation(
     id: number,
     data: NewSimulation,
   ): Promise<SavedSimulation> {
-    const response = await fetch(`/backend/simulacao/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await api.put(`/simulacao/${id}`, data);
 
-    if (!response.ok) {
+    if (response.status != 200) {
       throw new Error("Erro ao atualizar simulação");
     }
 
-    return await response.json();
+    return await response.data;
   }
 
   static async deleteSimulation(id: number): Promise<void> {
-    const response = await fetch(`/backend/simulacao/${id}`, {
-      method: "DELETE",
-    });
+    const response = await api.delete(`/simulacao/${id}`);
 
-    if (!response.ok) {
+    if (response.status != 204) {
       throw new Error("Erro ao excluir simulação");
     }
   }
