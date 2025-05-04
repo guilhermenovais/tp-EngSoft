@@ -44,6 +44,16 @@ export class SimulationService {
     return await response.data;
   }
 
+  static async getAllSimulations(): Promise<SavedSimulation[]> {
+    const response = await api.get("/simulacao/getAll");
+
+    if (response.status != 200) {
+      throw new Error("Erro ao buscar simulações");
+    }
+
+    return await response.data;
+  }
+
   static async updateSimulation(
     id: number,
     data: NewSimulation,
@@ -64,15 +74,4 @@ export class SimulationService {
       throw new Error("Erro ao excluir simulação");
     }
   }
-
-  static async listSimulations(): Promise<SavedSimulation[]> {  //Esta parte é responsável por listar as simulações
-    const response = await fetch("/backend/simulacoes");
-  
-    if (!response.ok) {
-      throw new Error("Erro ao listar simulações");
-    }
-  
-    return await response.json();
-  }
-  
 }
