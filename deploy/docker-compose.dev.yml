@@ -9,8 +9,6 @@ services:
     environment:
       - NODE_ENV=development
     command: ["pnpm", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
-    ports:
-      - 3000:3000
     depends_on:
       - backend
     networks:
@@ -32,8 +30,6 @@ services:
       - DB_PASSWORD=root
       - DB_NAME=data
     command: ["flask", "--app", "main", "run", "--host=0.0.0.0", "--debug"]
-    ports:
-      - "5000:5000"
     depends_on:
       db:
         condition: service_healthy
@@ -62,6 +58,7 @@ services:
           "--innodb_initialized",
         ]
       start_period: 1m
+      start_interval: 1s
       interval: 1m
       timeout: 5s
       retries: 3
@@ -85,3 +82,4 @@ networks:
     ipam:
       config:
         - subnet: 192.168.155.0/24
+

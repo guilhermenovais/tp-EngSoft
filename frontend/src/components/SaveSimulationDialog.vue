@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" persistent max-width="400">
+  <v-dialog v-model="visible" persistent max-width="400" @keyup.enter="confirm">
     <v-card>
       <v-card-title class="text-h6">Salvar Simulação</v-card-title>
       <v-card-text>
