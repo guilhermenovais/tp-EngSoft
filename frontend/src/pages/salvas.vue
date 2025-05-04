@@ -1,88 +1,111 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-xl font-bold mb-6">Simulações Salvas</h1>
+  <h2 class="text-h5 mb-6">Simulações Salvas</h2>
 
-    <div v-if="loading">Carregando simulações...</div>
-    <div v-else-if="error" class="text-red-500">{{ error }}</div>
-    <div v-else-if="simulations.length === 0">
-      Nenhuma simulação salva encontrada.
-    </div>
+  <v-container fluid>
+    <v-row>
+      <v-col v-for="simulation in simulations" :key="simulation.id" cols="12">
+        <v-card
+          class="pa-4 d-flex justify-space-between align-center"
+          elevation="2"
+        >
+          <div>
+            <div class="text-subtitle-1 font-weight-medium">
+              {{ simulation.nome }}
+            </div>
+          </div>
 
-    <div v-else class="space-y-6">
-      <div
-        v-for="sim in simulations"
-        :key="sim.id"
-        class="border border-gray-600 rounded-lg p-6 bg-[#121212]"
-      >
-        <h2 class="text-lg font-semibold mb-4">Parâmetros da Simulação</h2>
+          <div class="d-flex gap-2">
+            <v-btn
+              color="primary"
+              variant="text"
+              icon
+              @click="goToSimulation(simulation.id)"
+            >
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn
+              color="error"
+              variant="text"
+              icon
+              @click="deleteSimulation(simulation.id)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
 
-        <p><strong>Nome:</strong> {{ sim.nome }}</p>
-        <p>
-          <strong>Valor Total:</strong> R$
-          {{ sim.valor_total.toLocaleString("pt-BR") }}
-        </p>
-        <p>
-          <strong>Entrada:</strong> R$ {{ sim.entrada.toLocaleString("pt-BR") }}
-        </p>
-        <p><strong>Juros (%):</strong> {{ sim.juros }}</p>
-        <p><strong>Inflação (%):</strong> {{ sim.inflacao }}</p>
-        <p><strong>Parcelas:</strong> {{ sim.qtd_parcelas }}</p>
-        <p><strong>Tabela:</strong> {{ sim.tabela }}</p>
+    <v-alert type="info" v-if="!simulations.length" class="mt-4">
+      Nenhuma simulação encontrada.
+    </v-alert>
+  </v-container>
 
-        <div class="flex space-x-4 mt-4">
-          <v-btn color="primary" @click="confirmEdit(sim.id)">Editar</v-btn>
-          <v-btn color="error" @click="deleteSimulation(sim.id)">Excluir</v-btn>
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-snackbar v-model="snackbar.visible" :color="snackbar.color" timeout="3000">
+    {{ snackbar.message }}
+    <template v-slot:actions>
+      <v-btn color="white" variant="text" @click="snackbar.visible = false">
+        OK
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import {
-  SimulationService,
-  type SavedSimulation,
-} from "@/services/SimulationService";
+import { SimulationService } from "@/services/SimulationService";
+import { useUsuarioStore } from "@/stores/user";
 
-const simulations = ref<SavedSimulation[]>([]);
-const loading = ref(true);
-const error = ref<string | null>(null);
 const router = useRouter();
+const usuarioStore = useUsuarioStore();
 
-const fetchSimulations = async () => {
+const simulations = ref<{ id: number; nome: string }[]>([]);
+
+const snackbar = ref({
+  visible: false,
+  message: "",
+  color: "success",
+});
+
+async function loadSimulations() {
   try {
-    simulations.value = await SimulationService.getAllSimulations();
+    const userId = usuarioStore.usuario.id;
+    simulations.value = (await SimulationService.getAllSimulations()).filter(
+      (simulation) => simulation.id_autor === userId,
+    );
   } catch (err) {
-    error.value = "Erro ao carregar simulações salvas.";
-  } finally {
-    loading.value = false;
+    console.error("Erro ao carregar simulações", err);
+    snackbar.value = {
+      visible: true,
+      message: "Erro ao carregar simulações",
+      color: "error",
+    };
   }
-};
+}
 
-const deleteSimulation = async (id: number) => {
+onMounted(loadSimulations);
+
+function goToSimulation(id: number) {
+  router.push(`/savedSimulation/${id}`);
+}
+
+async function deleteSimulation(id: number) {
   try {
     await SimulationService.deleteSimulation(id);
-    simulations.value = simulations.value.filter((s) => s.id !== id);
+    snackbar.value = {
+      visible: true,
+      message: "Simulação excluída com sucesso",
+      color: "green",
+    };
+    await loadSimulations();
   } catch (err) {
-    alert("Erro ao excluir simulação.");
+    console.error("Erro ao excluir simulação", err);
+    snackbar.value = {
+      visible: true,
+      message: "Erro ao excluir simulação",
+      color: "error",
+    };
   }
-};
-
-const confirmEdit = async (id: number) => {
-  const confirm = window.confirm(
-    "Você deseja editar esta simulação? Ela será removida e substituída.",
-  );
-  if (!confirm) return;
-
-  try {
-    await deleteSimulation(id);
-    router.push("/");
-  } catch (err) {
-    alert("Erro ao excluir a simulação para edição.");
-  }
-};
-
-onMounted(fetchSimulations);
+}
 </script>
