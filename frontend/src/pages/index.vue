@@ -20,9 +20,14 @@ import { useRouter } from "vue-router";
 import Simulation from "@/components/Simulation.vue";
 import { type FinancingInput } from "@/utils/calculateFinancing";
 import { SimulationService } from "@/services/SimulationService";
+import { useUsuarioStore } from "@/stores/user";
 
 const dialogVisible = ref(false);
 const router = useRouter();
+
+const usuarioStore = useUsuarioStore();
+
+const isLoggedIn = computed(() => !!usuarioStore.usuario);
 
 const formData = ref<FinancingInput>({
   valorTotal: 0,
@@ -34,7 +39,11 @@ const formData = ref<FinancingInput>({
 });
 
 function onSaveButtonClicked() {
-  dialogVisible.value = true;
+  if (isLoggedIn.value) {
+    dialogVisible.value = true;
+  } else {
+    goToLogin();
+  }
 }
 
 async function onSaveSimulationConfirm(nome: string) {
@@ -58,4 +67,8 @@ async function onSaveSimulationConfirm(nome: string) {
     alert("Erro ao salvar simulação.");
   }
 }
+
+const goToLogin = () => {
+  router.push("/login");
+};
 </script>
