@@ -30,8 +30,6 @@ services:
       - DB_PASSWORD=root
       - DB_NAME=data
     command: ["flask", "--app", "main", "run", "--host=0.0.0.0", "--debug"]
-    ports:
-      - "5000:5000"
     depends_on:
       db:
         condition: service_healthy
