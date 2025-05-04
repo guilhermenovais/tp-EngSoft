@@ -8,10 +8,18 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import Login from '../pages/Login.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: setupLayouts(routes),
+  routes: [
+    ...setupLayouts(routes),
+    {
+      path: '/login', 
+      name: 'login',
+      component: Login
+    }
+  ],
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

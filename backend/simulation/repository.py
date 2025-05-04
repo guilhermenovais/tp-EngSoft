@@ -1,5 +1,5 @@
 from simulation.model import Simulacao
-from main import db
+from extensions import db
 
 
 class SimulacaoRepository:
