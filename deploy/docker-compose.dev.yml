@@ -58,6 +58,7 @@ services:
           "--innodb_initialized",
         ]
       start_period: 1m
+      start_interval: 1s
       interval: 1m
       timeout: 5s
       retries: 3
