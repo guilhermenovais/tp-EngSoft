@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ../frontend:/app
-      - /app/node_modules
     environment:
       - NODE_ENV=development
     command: ["pnpm", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
@@ -33,6 +32,8 @@ services:
       - DB_PASSWORD=root
       - DB_NAME=data
     command: ["flask", "--app", "main", "run", "--host=0.0.0.0", "--debug"]
+    ports:
+      - "5000:5000"
     depends_on:
       db:
         condition: service_healthy
@@ -61,7 +62,6 @@ services:
           "--innodb_initialized",
         ]
       start_period: 1m
-      start_interval: 1s
       interval: 1m
       timeout: 5s
       retries: 3
