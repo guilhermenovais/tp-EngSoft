@@ -18,7 +18,7 @@
 const drawer = ref(true);
 
 const items = [
-  { title: "Calculadora", icon: "mdi-calculator", to: "/" },
+  { title: "Calculadora", icon: "mdi-calculator", to: "/calculadora" },
   { title: "Simulações Salvas", icon: "mdi-archive", to: "/salvas" },
 ];
 </script>

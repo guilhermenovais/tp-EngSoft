@@ -2,7 +2,11 @@
   <v-app-bar app color="primary" dark>
     <v-app-bar-nav-icon @click="$emit('toggle-drawer')" />
 
-    <v-app-bar-title>Calculadora de Financiamentos</v-app-bar-title>
+    <v-app-bar-title>
+    <RouterLink to="/" style="color: white; text-decoration: none;">
+    Calculadora de Financiamentos
+    </RouterLink>
+    </v-app-bar-title>
 
     <v-spacer></v-spacer>
 

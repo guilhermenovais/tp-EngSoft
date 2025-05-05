@@ -1,76 +1,64 @@
 <template>
-  <h2 class="text-h5 mb-4">Calculadora de Financiamento</h2>
+  <v-app>
+    <!-- Conteúdo central -->
+    <v-main>
+      <v-container
+        class="fill-height d-flex flex-column justify-center align-center text-center"
+      >
+        <h1 class="text-h3 font-weight-bold mb-6">
+          Bem-vindo à Calculadora de Financiamento
+        </h1>
+        <p class="mb-8 text-subtitle-1">
+          Faça simulações de financiamento com facilidade. Acesse a calculadora ou entre em sua conta.
+        </p>
 
-  <Simulation
-    v-model="formData"
-    @saveButtonClicked="onSaveButtonClicked"
-    :saveButtonLoading="false"
-  />
+        <div class="d-flex flex-column align-center gap-4">
+          <v-btn color="primary" @click="goToCalculadora" large>
+            Ir para a Calculadora
+          </v-btn>
 
-  <SaveSimulationDialog
-    :modelValue="dialogVisible"
-    @confirm="onSaveSimulationConfirm"
-    @cancel="dialogVisible = false"
-  />
+          <!-- Só aparece se NÃO estiver logado -->
+          <v-btn
+            v-if="!isLoggedIn"
+            color="secondary"
+            @click="goToLogin"
+            large
+          >
+            Login / Cadastro
+          </v-btn>
+        </div>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
-<script lang="ts" setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import Simulation from "@/components/Simulation.vue";
-import { type FinancingInput } from "@/utils/calculateFinancing";
-import { SimulationService } from "@/services/SimulationService";
-import { useUsuarioStore } from "@/stores/user";
+<script setup>
+import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 
-const dialogVisible = ref(false);
-const router = useRouter();
+const router = useRouter()
+const isLoggedIn = ref(false)
 
-const usuarioStore = useUsuarioStore();
+onMounted(() => {
+  // Verifica se existe algum token ou user no localStorage
+  const user = localStorage.getItem('user') || localStorage.getItem('token')
+  isLoggedIn.value = !!user
+})
 
-const isLoggedIn = computed(() => !!usuarioStore.usuario);
-
-const formData = ref<FinancingInput>({
-  valorTotal: 0,
-  entrada: 0,
-  juros: 0,
-  inflacao: 0,
-  qtdParcelas: 0,
-  tabela: "PRICE",
-});
-
-function onSaveButtonClicked() {
-  if (isLoggedIn.value) {
-    dialogVisible.value = true;
-  } else {
-    goToLogin();
-  }
-}
-
-async function onSaveSimulationConfirm(nome: string) {
-  dialogVisible.value = false;
-
-  const userId = usuarioStore.usuario.id;
-
-  try {
-    const response = await SimulationService.saveSimulation({
-      nome,
-      id_autor: userId,
-      valor_total: formData.value.valorTotal,
-      entrada: formData.value.entrada,
-      juros: formData.value.juros,
-      inflacao: formData.value.inflacao,
-      qtd_parcelas: formData.value.qtdParcelas,
-      tabela: formData.value.tabela,
-    });
-
-    router.push(`/savedSimulation/${response.id}`);
-  } catch (err) {
-    console.error("Erro ao salvar simulação", err);
-    alert("Erro ao salvar simulação.");
-  }
+const goToCalculadora = () => {
+  router.push('/calculadora')
 }
 
 const goToLogin = () => {
-  router.push("/login");
-};
+  router.push('/login')
+}
 </script>
+
+<style scoped>
+.fill-height {
+  min-height: 100vh;
+}
+.gap-4 {
+  gap: 1rem;
+}
+</style>
