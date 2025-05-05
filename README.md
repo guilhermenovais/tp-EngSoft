@@ -17,5 +17,5 @@ Lucas Vitor da Silva Ramos: Testes do sistema e Desenvolvedor Frontend
 Frontend: Vue - JS
 Backend: Flask - Python
 DataBase: MariaDB
-Versionamenti: Git/Github 
+Versionamento: Git/Github 
 
